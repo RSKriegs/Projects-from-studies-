@@ -1,0 +1,823 @@
+﻿SYSTEMY BAZ DANYCH
+https://www.e-sgh.pl/niezbednik/student_przedmiot.php?pid=11919&loguj=1
+
+
+Początek to moje notatki, do lab 4 są dość chaotycznie i nie wszystkie zadania umieściłem tudzież są one nieoznaczone, niemniej pierwsze 3 zajęcia to były podstawy, więc raczej nie ma takiego problemu
+
+
+
+
+a. DML (Data Manipulation Language)
+      INSERT - wstawianie wierszy do tabeli
+      UPDATE - modyfikacja istniejących wierszy
+      DELETE - usuwanie istniejących wierszy
+      SELECT - odczyt danych
+          
+   b. DDL (Data Definition Language)
+      CREATE - tworzenie obiektów b. danych
+      ALTER  - modyfikacja istniejących obiektów bazy danych (np. dodanie kolumny)
+      DROP   - usuwanie obiektów bazy danych
+   
+   c. DCL (Data Control Language)
+      GRANT  - nadawanie przywilejów w bazie danych
+      REVOKE - odbieranie przywilejów
+      
+SELECT *
+FROM table;
+
+
+   SELECT column1, column2, column3, ....
+   FROM table
+
+
+select employee_id, last_name, first_name, commission_pct
+from employees
+where commission_pct is null
+
+
+select employee_id, last_name, first_name, commission_pct
+from employees
+where commission_pct is not null
+
+do PD trzeba użyć VPN SGH:
+
+
+select last_name
+from employees
+where last_name like 'A%'
+
+
+Spool jako 'read'?
+
+PD:
+z.1
+SELECT department_id, last_name, first_name, salary, commission_pct
+FROM employees
+ORDER BY department_id, salary
+
+
+z.2
+SELECT last_name, first_name, salary
+FROM employees
+WHERE department_id = 20
+
+
+z.3
+SELECT last_name
+FROM employees
+WHERE last_name like '$T'
+
+
+
+
+SELECT last_name, first_name, salary
+FROM employees
+WHERE salary <= 5000 AND department_ID NOT LIKE '10%'
+
+
+SELECT last_name, first_name, salary
+FROM employees
+WHERE manager_id IS null
+
+
+SELECT last_name, first_name, salary
+FROM employees
+WHERE manager_id IS null
+
+
+SELECT last_name, first_name, salary
+FROM employees
+WHERE department_id LIKE '10' OR department_id LIKE '20' AND commission_pct IS NOT null
+
+
+SELECT last_name, first_name, salary
+FROM employees
+WHERE job_id NOT LIKE 'st_CLERK'
+
+
+SELECT department_id, department_name
+FROM departments
+WHERE department_id NOT LIKE '10' AND department_id NOT LIKE '20' AND department_id NOT LIKE '30'
+ 
+SELECT department_id, department_name
+FROM departments
+WHERE department_id NOT LIKE '10' AND department_id NOT LIKE '20' AND department_id NOT LIKE '30'
+
+
+SELECT last_name, (salary + salary*commission_pct)*12 + bonus "yearly income"
+FROM employees
+WHERE commission_pct IS NOT null OR department_id LIKE '10' OR department_id LIKE '20'
+
+
+
+
+SELECT last_name
+FROM employees
+WHERE last_name LIKE 'K___'
+
+
+SELECT last_name, first_name, salary
+FROM employees
+WHERE salary > 3000 AND department_ID LIKE '50'
+
+
+[Tutaj legit odp poszeregowane się zaczynają, poprzednie musiałbym się upewnić do których zadań się odnoszą]
+lab 4
+
+
+z.1
+      SELECT last_name,department_id, round(salary*1.50,2)
+      FROM employees
+      WHERE department_id = 10
+
+
+z.2
+      SELECT last_name
+      FROM employees
+      WHERE hire_date > to_date ('2000-01-01', 'YYYY-MM-DD')
+ z.3
+SELECT last_name, first_name, upper(last_name), upper(first_name)
+      FROM employees;
+
+
+z.4
+SELECT last_name, first_name, hire_date, to_char(hire_date, 'YYYY-MONTH-DD'), salary
+      FROM employees
+
+
+z.5
+SELECT to_char(hire_date, 'DAY')
+      FROM employees
+WHERE department_id = 20
+
+
+z.6
+SELECT substr(last_name,1,1)||substr(first_name,1,1)
+      FROM employees
+WHERE department_id = 10
+PD:
+z.1
+SELECT upper(last_name), upper(first_name), round(salary*1.25,2)
+      FROM employees
+z.2
+SELECT replace(replace(last_name,'K','A'),'k','a')
+      FROM employees
+
+
+
+
+lab5
+1.
+select department_id, max(salary)
+from employees
+group by department_id
+
+
+2.
+select count(employee_id)
+from employees
+group by job_id
+
+
+3.
+select manager_id
+from employees
+having count(employee_id) > 2
+group by manager_id
+
+
+4.
+select min(hire_date)
+from employees
+group by department_id
+
+
+PD:
+1.
+select department_id, job_id, max(salary)
+from employees
+group by department_id, job_id
+
+
+2.
+select department_id
+from employees
+having avg(salary) < 4000
+group by department_id
+
+
+Lab 6
+z.1
+SELECT department_name, last_name, first_name, salary
+FROM departments, employees
+WHERE departments.department_id = employees.department_id
+  AND departments.department_id < 80;
+
+
+z.2
+SELECT department_name, avg(salary)
+FROM departments, employees
+WHERE departments.department_id = employees.department_id
+GROUP BY departments.department_name
+HAVING count(employees.department_id) > 2;
+
+
+z.3
+SELECT city, count(d.department_id)
+FROM locations l, departments d
+WHERE l.location_id=d.location_id
+GROUP BY city;
+
+
+z.4
+SELECT city, department_name, d.department_id, last_name, first_name
+FROM locations l, departments d, employees e
+WHERE l.location_id=d.location_id AND d.department_id=e.department_id AND d.department_id NOT IN (10,20,30);
+
+
+PD:
+z.1
+SELECT d.department_id, count(e.last_name), max(salary), min(salary)
+FROM departments d, employees e
+WHERE d.department_id = e.department_id
+GROUP BY d.department_id;
+
+
+z.2
+SELECT job_id, count(*)
+FROM locations l, departments d, employees e
+WHERE l.location_id=d.location_id AND d.department_id=e.department_id
+GROUP BY job_id;
+  
+
+
+
+#7
+z.1
+SELECT e.first_name, e.last_name, e.salary, m.first_name, m.last_name, m.salary
+FROM employees e, employees m
+WHERE e.manager_id = m.employee_id AND e.hire_date < m.hire_date
+
+
+z.2
+SELECT d.department_id, d.department_name, e.last_name, e.first_name
+FROM employees e, departments d
+WHERE d.department_id = e.department_id
+
+
+z.3
+SELECT j.grade_level, avg(e.salary)
+FROM employees e, job_grades j
+where salary between lowest_sal and highest_sal
+GROUP BY j.grade_level;
+
+
+z.4
+SELECT m.last_name, m.first_name, max(e.salary), min(e.salary)
+FROM employees e, employees m
+WHERE e.manager_id = m.employee_id
+GROUP BY m.last_name, m.first_name;
+
+
+PD:
+z.1
+SELECT e.first_name, e.last_name, e.salary, m.first_name, m.last_name, m.salary, j.grade_level
+FROM employees e, employees m, job_grades j
+WHERE m.salary between lowest_sal and highest_sal AND e.salary between lowest_sal and highest_sal
+
+
+z.2
+SELECT m.last_name, m.first_name, m.salary, avg(e.salary), j.grade_level
+FROM employees e, employees m, job_grades j
+WHERE e.manager_id = m.employee_id AND e.salary BETWEEN lowest_sal AND highest_sal
+GROUP BY m.last_name, m.first_name, m.salary, j.grade_level;
+
+
+#8
+z.1
+   SELECT department_id, last_name, first_name, salary
+   FROM employees
+   WHERE (department_id, salary) IN (select department_id, max(salary)
+                                     from employees
+                                     group by department_id);
+z.2
+select hire_date, last_name, first_name
+from employees
+where hire_date in (select max(hire_date)
+from employees);
+
+
+z.3
+select hire_date, job_id, last_name, first_name
+from employees
+where hire_date in (select min(hire_date)
+from employees
+group by job_id);
+
+
+z.4
+select salary, j.grade_level, e.last_name, e.first_name
+from employees e, job_grades j
+where salary between lowest_sal and highest_sal
+    and (grade_level,salary) in (select grade_level,max(salary)
+from employees, job_grades
+where salary between lowest_sal and highest_sal
+group by grade_level);
+
+
+PD z.1
+select salary, department_id, job_id, last_name, first_name
+from employees
+where salary in (select min(salary)
+from employees
+group by department_id,job_id);
+
+
+z.2
+select hire_date, last_name, first_name
+from employees
+where hire_date in (select min(hire_date)
+from employees);
+
+
+lab 9
+z.1
+select e.job_id, e.last_name, e.first_name, e.salary, e2.avg_salary
+from employees e, (select job_id, avg(salary) avg_salary
+from employees
+group by job_id) e2
+where e.job_id = e2.job_id
+and e.salary < e2.avg_salary;
+
+
+z.2
+select e.department_id, e.last_name, e.first_name, e.salary, e2.avg_salary
+from employees e, (select department_id, avg(salary) avg_salary
+from employees
+group by department_id) e2
+where e.department_id = e2.department_id
+and e.salary > e2.avg_salary;
+
+
+z.3
+select m.manager_id, m.first_name, m.last_name, e.salary, m2.avg_salary
+FROM employees e, employees m, (select manager_id, avg(salary) avg_salary
+from employees
+group by manager_id) m2
+WHERE e.employee_id = m.manager_id AND m.manager_id=m2.manager_id
+and m.salary < m2.avg_salary;
+
+
+z.4
+select employee_id, hire_date, last_name, first_name
+from employees e
+where 4 > (select count(*)
+from employees
+where hire_date < e.hire_date)
+
+
+z.1
+select *
+from (select department_id, count(*) no_of_employees
+from employees e
+group by department_id
+order by count(*) desc)
+where rownum <=3
+
+
+z.2
+select grade_level, last_name, first_name, salary
+from job_grades j, employees e
+where salary between lowest_sal and highest_sal
+    and salary > (select avg(salary)
+                from employees e2, job_grades j2
+                where e2.salary between j2.lowest_sal and j2.highest_sal
+                    and j2.grade_level = j.grade_level)
+
+
+
+
+lab 10
+z.1
+CREATE TABLE employees_copy
+AS SELECT *
+FROM employees;
+z.2
+UPDATE employees_copy
+SET salary = salary*1.1;
+        
+z.3
+DELETE FROM employees_copy e
+    WHERE salary > (select avg(salary)
+    FROM employees
+    WHERE department_id=e.department_id);
+    
+z.4
+INSERT INTO EMPLOYEES_COPY
+SELECT *
+FROM EMPLOYEES
+WHERE SALARY > (SELECT AVG(SALARY)
+                FROM EMPLOYEES E2
+                WHERE department_id = employees.department_id);
+z.1
+UPDATE employees_copy
+SET department_id = 20
+WHERE department_id=10;
+
+
+z.2
+update employees_copy e
+set salary=(select min(salary)
+from employees_copy, job_grades
+where salary between lowest_sal and highest_sal
+and e.salary between lowest_sal and highest sal);
+
+
+Lab11
+z.1
+create table DEPT (DEPTNO number(4) primary key,
+                   DNAME varchar2(30));                    
+INSERT INTO DEPT
+SELECT department_id, department_name
+from departments
+z.2
+CREATE TABLE EMP (EMPNO NUMBER(10) primary key,
+                NAME VARCHAR2(100) not null,
+                 SAL  NUMBER(7,2) check (SAL>0),
+                 DEPTNO NUMBER(4) references departments(department_id));
+
+
+z.3
+CREATE TABLE EMP (EMPNO NUMBER(10) primary key,
+                NAME VARCHAR2(100) not null,
+                 SAL  NUMBER(7,2) check (SAL>0),
+                 DEPTNO NUMBER(4) references departments(department_id));
+INSERT INTO EMP
+SELECT employee_id, last_name||first_name, salary, department_id
+from employees
+
+
+z.4
+
+
+ create or replace view emp_sal_stats
+   as
+   select d.deptno, dname, avg(sal) avg_sal, max(sal) max_sal, min(sal) min_sal
+   from dept d, emp e
+   where d.deptno = e.deptno
+   group by d.deptno, dname
+
+
+PD:
+z.1
+DELETE FROM EMP 
+deptno - usunie 20
+
+
+z.2
+DELETE FROM deptt 
+deptno - usunie 0
+
+
+lab 12
+z.1
+select to_char (hire_date, 'YY'), job_id, count(job_id)
+from employees
+group by job_id, to_char(hire_date, 'YY');
+
+
+z.2
+select e.job_id, count(l.city)
+from employees e, locations l
+group by e.job_id;
+
+
+z.3
+select e.department_id, l.city
+from departments e, locations l
+where e.location_id=l.location_id(+)
+UNION
+select e.department_id, l.city
+from departments e, locations l
+where e.location_id(+)=l.location_id;
+
+
+z.4
+select j.grade_level, count(e.department_id), avg(e.salary)
+from job_grades j, employees e
+where salary between lowest_sal and highest_sal
+group by j.grade_level;
+
+
+z.5
+select m.last_name, m.first_name, e.last_name, e.first_name
+from employees m, employees e
+where m.manager_id=e.employee_id
+UNION
+select m.last_name, m.first_name, e.last_name, e.first_name
+from employees m, employees e
+where m.manager_id=e.employee_id;
+
+
+z.6
+select s.last_name, s.first_name, count(*)
+   from employees s, employees p
+   where s.employee_id = p.employee_id
+     and p.salary > ( select avg(salary)
+                    from employees
+                    where manager_id = s.employee_id )
+   group by s.last_name, s.first_name
+
+
+z.7
+select m.department_id, e.department_id, d.department_name
+from employees m, employees e, departments d
+where m.manager_id=e.employee_id and m.manager_id=d.manager_id and e.department_id=d.department_id 
+and m.department_id NOT IN e.department_id;
+
+ew. od gościa:
+ select ds.department_name, dp.department_name
+   from departments ds, employees s, departments dp, employees s
+   where ds.department_id = s.department_id
+     and s.employee_id = p.manager_id
+     and p.department_id = dp.department_id
+     and ds.department_name <> dp.department_name
+
+
+z.8
+select j.grade_level, count(e.department_id), avg(e.salary)
+from job_grades j, employees e
+where salary between lowest_sal and highest_sal 
+having count(distinct e.department_id)>1
+group by j.grade_level;
+
+
+PD z.1
+select se_max.last_name, se_max.max_salary, e2.last_name
+   from ( select s.employee_id, s.last_name, max(e.salary) max_salary
+          from employees s, employees e
+          where s.employee_id = e.manager_id
+          group by s.employee_id, s.last_name) se_max, employees e2
+   where se_max.employee_id = e2.manager_id
+     and se_max.max_salary = e2.salary
+
+
+
+
+PD z.2
+select count(e.department_id), l.city
+from departments e, locations l
+where e.location_id=l.location_id
+having count(e.department_id)>1
+group by l.city;
+
+
+Lab 13
+z.1
+SELECT employees.Last_Name, employees.first_name, employees.Department_ID, departments.Department_Name 
+FROM employees
+INNER JOIN departments ON
+employees.Department_ID = departments.Department_ID
+WHERE employees.Department_ID < 80;
+
+
+z.2
+SELECT departments.Department_Name, avg(employees.salary), count(employees.employee_id)
+FROM employees
+INNER JOIN departments ON
+employees.Department_ID = departments.Department_ID
+HAVING count(employees.employee_id) > 2
+GROUP BY departments.Department_Name;
+
+
+z.3
+SELECT employees.Last_Name, departments.Department_Name 
+FROM employees
+LEFT OUTER JOIN departments ON
+employees.Department_ID = departments.Department_ID;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+Lab 13 txt:
+1. Cross join (iloczyn kartezjański)
+
+
+
+
+składnia ANSI 99
+SELECT *
+FROM employees CROSS JOIN departments;
+
+
+Przykład użycia zwykłej składni
+SELECT *
+FROM employees, departments;
+
+
+2. Złączenie wewnętrzne 
+
+
+Złączenie wewnętrzne jest odpowiednikiem tradycyjnego złączenia, w którym jawnie podajemy warunek połączeniowy
+Składnia ANSI 99
+SELECT employees.Last_Name, employees.Department_ID, departments.Department_Name 
+FROM employees
+INNER JOIN departments ON
+employees.Department_ID = departments.Department_ID;
+
+
+Składnia ANSI 92
+SELECT employees.Last_Name, employees.Department_ID, departments.Department_Name 
+FROM employees, departments
+where employees.Department_ID = departments.Department_ID;
+
+
+
+
+
+
+3. Złączenie równościowe
+Złączenie równościowe zakłada podanie nazwy kolumny, która występuje w obydwu łączonych ze sobą tabelach. System w oparciu o tą kolumnę automatycznie tworzy stosowny warunek połączeniowy oparty 
+o równość
+
+
+SELECT *
+FROM employees INNER JOIN departments USING (Department_ID);
+
+
+
+
+
+
+4. Natural Join
+Złączenie naturalne buduje automatycznie warunek połączeniowy oparty o WSZYSTKIE kolumny o tej samej nazwie pochodzące z obydwu łączonych ze sobą tabel
+SELECT *
+FROM employees NATURAL JOIN departments;
+
+
+
+
+5. Outer joins
+W przeciwieństwie do operatora (+), złączenia zewnętrzne w składni ANSI 99 wskazują na tabelę "bogatszą" w wiersze
+a. left outer join
+SELECT *
+FROM employees 
+LEFT OUTER JOIN departments ON employees.Department_ID = departments.Department_ID;
+
+
+w pow. przypadku wyświetlimy dane o pracownikach bez departamentów, gdyż
+a) stosujemy LEFT OUTER JOIN  - zł. zewn. lewostronne
+b) tabela employees została wymieniona po LEWEJ stronie kl. LEFT OUTER JOIN w kl. FROM
+
+
+b. right outer join
+SELECT *
+FROM employees RIGHT OUTER JOIN departments
+  ON employees.Department_ID = departments.Department_ID;
+
+
+w pow. przypadku wyświetlimy dane o departamentach bez pracowników, gdyż
+a) stosujemy RIGHT OUTER JOIN  - zł. zewn. prawostronne
+b) tabela departments została wymieniona po PRAWEJ stronie kl. RIGHT OUTER JOIN w kl. FROM
+
+
+
+
+
+
+c. full outer joins
+SELECT *
+FROM employee FULL OUTER JOIN department
+  ON employee.Department_ID = department.Department_ID;
+
+
+w pow. przypadku wydrukujemy dane zarówno o pracownikach bez departamentów, jak i departamentach bez pracowników
+
+
+
+
+
+
+7 wyrażenie CASE
+wyrażenie CASE jest odpowiednikiem funkcji DECODE, ale w przeciwieństwie do funkcji decode, jest częścią standardu SQL ANSI
+
+
+a. proste wyrażenie CASE
+
+
+Proste wyrażenie CASE sprawdza, czy podana wartość mieści się na liście kl. WHEN
+Jeśli tak, to zwraca stosowną wartość rN
+
+
+The following illustrates the syntax of the simple CASE expression:
+
+
+CASE e
+    WHEN e1 THEN
+          r1
+    WHEN e2 THEN
+          r2
+    WHEN en THEN
+          rn 
+    [ ELSE r_else ]
+END
+
+
+
+
+
+
+
+
+Poniższe zapytanie wyjorzystuje wyrażenie CASE celem obliczenia zniżki dla każdej kategorii produktu z osobna: CPU 5%, video card 10%, pozostałe kategorie 8%
+
+
+SELECT
+  product_name,
+  list_price,
+  CASE category_id
+    WHEN 1
+    THEN ROUND(list_price * 0.05,2) -- CPU
+    WHEN 2
+    THEN ROUND(List_price * 0.1,2)  -- Video Card
+    ELSE ROUND(list_price * 0.08,2) -- other categories
+  END discount
+FROM
+  products
+ORDER BY
+  product_name;
+
+
+b. Złożony CASE
+
+
+Złożone wyrażenie CASE sprawdza w każdej kl. WHEN wartość logiczną odpowiedniego wyrażenia e
+Zwracana jest wartość wyrażenia "r", dla którego pierwsze "e" jest prawdziwe
+
+
+CASE 
+    WHEN e1 THEN r1
+    [ WHEN e2 THEN r2]
+    ...
+    [ELSE
+        r_else]
+END
+
+
+Przykład:
+SELECT
+  product_name,
+  list_price,
+  CASE
+    WHEN list_price > 0 AND list_price  < 600
+        THEN 'Mass'
+    WHEN list_price >= 600 AND list_price < 1000
+        THEN 'Economy'
+    WHEN list_price >= 1000 AND list_price < 2000
+        THEN 'Luxury'
+    ELSE 
+        'Grand Luxury'
+  END product_group
+FROM
+  products
+WHERE
+  category_id = 1
+ORDER BY
+  product_name;
+
+
+Zadania
+
+
+1. przy użyciu składni ANSI 99 zbuduj raport, który zawieera nazwę departamentu, nazwiska i imiona wszystkich pracownikóœ w nim pracujących, wraz z ich pensjami
+   Wyłącz z listy departamenty z id większymi, niż 80
+   
+2. przy użyciu składni ANSI 99, zbuduj raport, który zawiera nazwę departamentu oraz średnią pensję wszystkich jego pracowników.
+   z listy wyłącz departamenty, które zatrudniają więcej, niż 2 pracownikówes
+
+
+3. przy użyciu składni ANSI 99, zbuduj raport, który zawiera nazwy departamentów oraz nazwiska w nim zatrudnionych pracownikóe
+   raport powienien zaiwerać zarówno dane o departamentach bez pracowników, jak i o pracownikach bez departamentów
