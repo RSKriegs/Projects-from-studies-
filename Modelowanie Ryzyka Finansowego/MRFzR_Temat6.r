@@ -1,3 +1,5 @@
+#The code is a modified version of the code from the website: https://web.sgh.waw.pl/~mrubas/MRFzR/MRFzR.html
+
 rm(list=ls())
 require(zoo)
 require(ggplot2)
@@ -18,7 +20,7 @@ plot(r, main="stopy zwrotu", xlab="", ylab="")
 # Ustawienia do testow warunkow skrajnych                #
 ##########################################################
  
-# W przypadku testow warunkow skrajnych zazwyczaj wykorzystujemy jak najd≥uøszπ probe
+# W przypadku testow warunkow skrajnych zazwyczaj wykorzystujemy jak najd≈Çu≈ºszƒÖ probe
 T     <- length(r)
 N     <- T                               
 r     <- tail(r,N)                       
@@ -37,7 +39,7 @@ pc
 # szerokosc okna
 w_length = 250             
 
-# rolowana minimum w ciπgu nastÍpnych w_length dni
+# rolowana minimum w ciƒÖgu nastƒôpnych w_length dni
 MAmin     <- rollapply(P, width=w_length, min, by=1, align="left")
 MAdecline <- MAmin/P[1:length(MAmin)]-1            # minimalna stopa zwrotu w ciagu kolejnych w_length dni
 
@@ -49,7 +51,7 @@ abline(v=index(MAdecline[N0]),col=2, lwd=3)
 
 ScHist <- min(MAdecline)          # maksymalny spadek w ciagu roku
 
-# data poczatkowa i ko≈Ñcowa spadku
+# data poczatkowa i koƒπ‚Äûcowa spadku
 N1        <- N0 + which.min(P[N0:(N0+w_length-1)]) - 1
 P[c(N0,N1)]
 
@@ -67,15 +69,15 @@ A = c(A1,A2,A3,A4,A5)
 A
 # Etap 1: analiza wrazliwosci wzgledem czynnikow ryzyka
 
-RF1 = sum(c(0,0,0,0,1)*A)    #spadek cen surowcÛw o 50%
+RF1 = sum(c(0,0,0,0,1)*A)    #spadek cen surowc√≥w o 50%
 # procentowa reakcja na 1% wzrost indeksow gieldowych (w kraju i zagranica) 
-RF2 = sum(c(0,0,0,0,-0.5 )*A)   #wzroúcie cen z≥ota o 20%
+RF2 = sum(c(0,0,0,0,-0.5 )*A)   #wzro≈õcie cen z≈Çota o 20%
 # procentowa reakcja na wzrost krzywej dochodowosci na calej dlugosci o 100 pb.
-RF3 = sum(c(1.5,1.5,0,0,0 )*A)   #spadek cen akcji na rynkach rozwijajacych siÍ i rozwiniÍtych o 15%
+RF3 = sum(c(1.5,1.5,0,0,0 )*A)   #spadek cen akcji na rynkach rozwijajacych siƒô i rozwiniƒôtych o 15%
 # procentowa reakcja na deprecjacje kursu o 1%
-RF4 = sum(c(0,0,5,3,0)*A)   #przesuniÍciu krzywej dochodowoúci o 50 pb w dÛ≥
+RF4 = sum(c(0,0,5,3,0)*A)   #przesuniƒôciu krzywej dochodowo≈õci o 50 pb w d√≥≈Ç
 # procentowa reakcja na wzrost spreadu kredytowego o 100 pb.
-RF5 = sum(c(0,0.5,0,0,0.5)*A)   # odp≥ywie kapita≥u z rynkÛw wschodzπcych i deprecjacji ich kursÛw o 10%
+RF5 = sum(c(0,0.5,0,0,0.5)*A)   # odp≈Çywie kapita≈Çu z rynk√≥w wschodzƒÖcych i deprecjacji ich kurs√≥w o 10%
 # procentowa reakcja na wzrost cen surowcow o 1%
 
 # Etap 2: analizy scenariuszowe 
