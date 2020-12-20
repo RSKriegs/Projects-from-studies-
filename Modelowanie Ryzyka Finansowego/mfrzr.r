@@ -1,3 +1,6 @@
+#The code is a modified version of the code from the website: https://web.sgh.waw.pl/~mrubas/MRFzR/MRFzR.html
+
+
 rm(list=ls())
 # Pakiet do zapisu danych w formacie zoo
 require(zoo)
@@ -45,7 +48,7 @@ r  <- tail(r,N)                        # stopy zwrotu
 R  <- coredata(r)
 
 ##########################################################
-# Statystyki opisowe dla logarytmicznych stóp zwrotu WIG #
+# Statystyki opisowe dla logarytmicznych stÃ³p zwrotu WIG #
 ##########################################################
 
 mu = sum(R)/N
@@ -90,7 +93,7 @@ anscombe.test(R)
 jarque.test(R)
 
 #######################################################
-# Rozk³ad t-Studenta                                  #
+# RozkÂ³ad t-Studenta                                  #
 #######################################################
 
 x = seq(-5,5,0.01)
@@ -102,7 +105,7 @@ ggplot(data = data.frame(junk), aes(x = x)) +
   geom_line(aes(y = v10,colour="v=10")) +
   geom_line(aes(y = v5,colour="v=5")) +
   geom_line(aes(y = v3,colour="v=3")) +
-  labs(title="rozk³ad t-Studenta", y="", x="", caption="")+
+  labs(title="rozkÂ³ad t-Studenta", y="", x="", caption="")+
   theme_bw()+
   scale_colour_manual("", 
                       breaks = c("v=Inf", "v=10","v=5","v=3"),
@@ -156,7 +159,7 @@ abline(a=0,b=1, lwd=2)
 # Metoda momentow (K - kurtoza)
 v0 <- 4 + 6/(K-3)
 
-# Metoda najwiêkszej wiarygodnoœci
+# Metoda najwiÃªkszej wiarygodnoÅ“ci
 require(MASS)
 
 d0 <- fitdistr(R0, "normal")
@@ -277,7 +280,7 @@ abline(v=c(VaR_N,ES_N) ,lwd=2, col=c("blue","red"),lty=c(2,2))
 legend("left", c("VaR dla rozkl. norm.","ES dla rozkl. norm."), lty=c(2,2), col=c("blue","red"), bty="n")
 
 ##########################################################
-# Symulacje Monete Carlo dla rozk³adu normalnego         #
+# Symulacje Monete Carlo dla rozkÂ³adu normalnego         #
 ##########################################################
 
 M      <- 10000     # liczba losowan w symulacjach Monte Carlo
@@ -344,7 +347,7 @@ K   = kurtosis(R)
 PsiP    <- qnorm(p)
 VaR_CF  <- m + s*(PsiP + (PsiP^2-1)/6*S + (PsiP^3-3*PsiP)/24*(K-3) - (2*PsiP^3-5*PsiP)/36*(S^2) ) 
 
-# Porównanie 
+# PorÃ³wnanie 
 
 # HS / NORM / t-Student na jednym wykresie #
 
@@ -362,7 +365,7 @@ colnames(Tabela) <- c("VaR","ES")
 rownames(Tabela) <- c("sym. hist.", "rozk. norm.", "rozklad t", "Cornish-Fischer")
 round(-100*Tabela,2)
 
-# Funkcje i wykres VaR dla ró¿nych p  #
+# Funkcje i wykres VaR dla rÃ³Â¿nych p  #
 #######################################
 source("MRFzR_FunkcjeBlok1.R")
 TabelaP = matrix(NA,100,7)
@@ -415,7 +418,7 @@ Ccf(R*R, R)
 
 require(rugarch)
 
-# Ustawienia, czy obliczenia dla rozk³adu normalnego czy t-Studenta z 5 stopniami swobody
+# Ustawienia, czy obliczenia dla rozkÂ³adu normalnego czy t-Studenta z 5 stopniami swobody
 q    <- qdist("std", p=p, shape=5)
 qf   <- function(x) qdist("std", p=x, shape=5)
 # UWAGA: w pakiecie rugarch automatyczne losowanie z rokladu o parametrach mu=0, sig=1. Porownaj z:
@@ -443,7 +446,7 @@ plot(merge(r, VaR_const, ES_const), plot.type="single", col=c(1,2,3), main=paste
 legend("bottomright", c("VaR", "ES"), lty=1, col=2:3)
 
 # 2. Parametry zmienne w czasie: model sredniej ruchomej (MA) 
-# rozk³ad t-Studenta z 5 stopniami swobody / rozk³ad normalny
+# rozkÂ³ad t-Studenta z 5 stopniami swobody / rozkÂ³ad normalny
 ###############################################################
 
 # szerokosc okna
@@ -452,7 +455,7 @@ w_length = 20
 # rolowana srednia i odchylenie standardowe
 MAmean  <- rollapply(r, width=w_length, mean, by=1, align="right")
 MAstd   <- rollapply(r, width=w_length, sd,   by=1, align="right")
-# opznione o jeden okres, aby przedzial ufnosci na kolejny okres by³ oparty o dane do momentu t-1
+# opznione o jeden okres, aby przedzial ufnosci na kolejny okres byÂ³ oparty o dane do momentu t-1
 MAmean <- lag(MAmean, -1)
 MAstd  <- lag(MAstd,  -1)
 # VaR i ES (rozklad t-Studenta o 5 stopniach swobody)
@@ -473,7 +476,7 @@ VaR_MA  <- mT + sT*q
 ES_MA   <- mT + sT*(1/p * integrate(qf, 0, p)$value)
 
 # 3. Kalibrowany EWMA (RiskMetrics) 
-# rozk³ad t-Studenta z 5 stopniami swobody / rozk³ad normalny
+# rozkÂ³ad t-Studenta z 5 stopniami swobody / rozkÂ³ad normalny
 ###############################################################
 
 lambda      <- 0.94                          # parametr wygladzajacy
@@ -579,7 +582,7 @@ sT  <- as.numeric(sigma(GARCHfct))
 VaR_GARCH  = mT + sT*q
 ES_GARCH   = mT + sT*(1/p * integrate(qf, 0, p)$value)
 
-# 6. Efekt d¿wigni: model eGARCH(1,1)  
+# 6. Efekt dÂ¿wigni: model eGARCH(1,1)  
 ###########################################################
 
 EGARCHspec <- ugarchspec(mean.model=list(armaOrder=c(0,0), include.mean=TRUE),
