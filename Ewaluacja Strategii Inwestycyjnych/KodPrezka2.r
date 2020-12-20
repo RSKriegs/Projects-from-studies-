@@ -1,4 +1,4 @@
-#Usuniêcie starych zmiennych - dok³adnie jedno rozwi¹zanie
+#The file contains the code that I have created that bases on a code given by my lecturer
 rm(list=ls())
 require(lpSolveAPI)
 require(zoo)
@@ -29,9 +29,8 @@ b.c <- zoo(b.cena.otwarcia , order.by = daty)
 dane.stopa.wolna <- read.csv2(file = stopa.wolna, head=TRUE, sep=",", dec=".")
 rf <- dane.stopa.wolna$"Otwarcie"
 daty <- as.Date(as.character(dane.stopa.wolna$"Data"), format=data.format)
-rf <- zoo(rf/1200 , order.by = daty) #dzielnie bo w procentach i skali rocznej
+rf <- zoo(rf/1200 , order.by = daty) 
 
-#Ustalenie daty pocz¹tku i koñca próby
 data.start <- "2016-04-01"
 data.koniec <-"2020-04-30" #"2020-02-28"
 
@@ -41,10 +40,10 @@ c2<-window(c.aktywo2, start=as.Date(data.start), end=as.Date(data.koniec))
 b.c1<-window(b.c, start=as.Date(data.start), end=as.Date(data.koniec)) 
 rf<-window(rf, start=as.Date(data.start), end=as.Date(data.koniec))
 
-#konwersja szeregu danych dziennych na dane miesiêczne
+#konwersja szeregu danych dziennych na dane miesiÃªczne
 #aktywo
 c1.m <- apply.monthly(c1, last) #first, mean, mojafunkcja
-K<-49 # d³ugoœæ okresu próby, 6 lat 
+K<-49 # dÂ³ugoÅ“Ã¦ okresu prÃ³by, 6 lat 
 c1.m <-tail(c1.m, n=K)
 daty.miesiace<-time(c1.m)
 c2.m <- apply.monthly(c2, last) #first, mean, mojafunkcja
@@ -69,7 +68,7 @@ b.r <- zoo(b.r , order.by = daty.miesiace[-1])
 
 c(mean(r1),mean(r2))
 
-#portfel o minimalnym ryzyku z³o¿ony z akcji 1 i 2 (wagi: w1, w2)
+#portfel o minimalnym ryzyku zÂ³oÂ¿ony z akcji 1 i 2 (wagi: w1, w2)
 portfel.markovitz<-function(r1,r2){
 
   T<-length(r1)
@@ -89,8 +88,8 @@ w2<-D[2,3]
 return(c(w1,w2))
 }
 
-###################    portfel z³o¿ony z akcji 1 i akcji 2 (wagi: w5 i w6), 
-###################    który minimalizuje  odchylenie przeciêtne MAD (Mean Average Deviation)
+###################    portfel zÂ³oÂ¿ony z akcji 1 i akcji 2 (wagi: w5 i w6), 
+###################    ktÃ³ry minimalizuje  odchylenie przeciÃªtne MAD (Mean Average Deviation)
 portfel.MAD<-function(r1,r2){
   T<-length(r1)
   r1.sr<-mean(r1)
@@ -103,23 +102,23 @@ ZPL <- make.lp(nrow=0, ncol=(2*T+3))
 lp.control(ZPL, sense="max",simplextype="primal")
 #funkcja celu
 set.objfn(ZPL, rep(-1, T), indices = (T+1):(2*T)) #y1...yT,d1...dT, \mu, w5,w6
-#warunki ograniczaj¹ce
+#warunki ograniczajÂ¹ce
 for (i in 1:T){add.constraint(ZPL, c(1,-1,-1), "<=", 0, indices=c(i,(T+i),(2*T+1)))} 
 for (i in 1:T){add.constraint(ZPL, c(-1,-1,1), "<=", 0, indices=c(i,(T+i),(2*T+1)))} 
 for (i in 1:T){add.constraint(ZPL, c(1,-exp(r1[i])+1,-exp(r2[i])+1), "=", 0, indices=c(i,(2*T+2),(2*T+3)))} 
 add.constraint(ZPL, c(-1,exp(r1.sr)-1,exp(r2.sr)-1), "=", 0, indices=c((2*T+1),(2*T+2),(2*T+3)))
 add.constraint(ZPL, c(1), ">=", r0, indices=c((2*T+1)))
-#czy dla ka¿dej wartoœci r0 uda siê wyznaczyæ portfel przy za³o¿eniu braku krótkiej sprzeda¿y?
+#czy dla kaÂ¿dej wartoÅ“ci r0 uda siÃª wyznaczyÃ¦ portfel przy zaÂ³oÂ¿eniu braku krÃ³tkiej sprzedaÂ¿y?
 add.constraint(ZPL, c(1,1), "=", 1, indices=c((2*T+2),(2*T+3)))
 set.bounds(ZPL, columns=c(2*T+2, 2*T+3), lower=c(0,0), upper=c(1,1))
 set.bounds(ZPL, columns=1:T, lower=rep(-1, T))
 set.bounds(ZPL, columns=2*T+1, lower=r0)
-#gdy dopuœcimy krótk¹ sprzeda¿, to nale¿y do³aczyæ:
+#gdy dopuÅ“cimy krÃ³tkÂ¹ sprzedaÂ¿, to naleÂ¿y doÂ³aczyÃ¦:
 #set.bounds(ZPL, columns=2*T+1, lower=-1)
 #set.bounds(ZPL, columns=c(2*T+2, 2*T+3), lower=c(-Inf, -Inf))
 ZPL
 write.lp(ZPL, "ZPL.txt")
-#rozwi¹zujemy ZPL
+#rozwiÂ¹zujemy ZPL
 solve(ZPL)
 get.variables(ZPL)
 #get.dual.solution(ZPL)
@@ -128,8 +127,8 @@ w6<-get.variables(ZPL)[2*T+3]
 return(c(w5,w6))
 }
 
-###################   portfel z³o¿ony z akcji 1 i 2 (wagi: w7, w8) 
-###################   maksymalizuj¹cy najwiêksz¹ stratê  WL (Worst Loss)
+###################   portfel zÂ³oÂ¿ony z akcji 1 i 2 (wagi: w7, w8) 
+###################   maksymalizujÂ¹cy najwiÃªkszÂ¹ stratÃª  WL (Worst Loss)
 portfel.WL<-function(r1,r2){
   T<-length(r1)
   r1.sr<-mean(r1)
@@ -149,10 +148,10 @@ add.constraint(ZPL, c(exp(r1.sr)-1, exp(r2.sr)-1,0,-1), "=", 0)
 set.bounds(ZPL, columns=3, lower=-1)
 set.bounds(ZPL, columns=c(1,2), lower=c(0,0), upper=c(1,1))
 set.bounds(ZPL, columns=4, lower=-1)
-# z krótk¹ sprzeda¿¹:
+# z krÃ³tkÂ¹ sprzedaÂ¿Â¹:
 #set.bounds(ZPL, columns=c(1,2), lower=c(-Inf, -Inf))
 ZPL
-#rozwi¹zujemy ZPL
+#rozwiÂ¹zujemy ZPL
 solve(ZPL)
 get.variables(ZPL)
 #get.dual.solution(ZPL)
@@ -163,7 +162,7 @@ return(c(w7,w8))
 }
 
 
-#czy trzeba tutaj po prostu w r1[1:36] zamiast [1:36] daæ [1:12] i odpowiednio skalibrowaæ? Przysi¹dê.
+#czy trzeba tutaj po prostu w r1[1:36] zamiast [1:36] daÃ¦ [1:12] i odpowiednio skalibrowaÃ¦? PrzysiÂ¹dÃª.
 r.portfela<-rep(0, times=36); #matrix(c(1,0,0,0), nrow=1)
 for (i in 1:36) {
   if (i==1) {
@@ -195,7 +194,7 @@ r.akcja1<-zoo(r.akcja1, order.by=daty.miesiace[13:48])
 r.akcja2<-exp(r2[12:47])-1
 r.akcja2<-zoo(r.akcja2, order.by=daty.miesiace[13:48])
 
-plot(r.akcja1, xlab=c("Miesi¹ce"), ylab=c("Prosta stopa zwrotu"))
+plot(r.akcja1, xlab=c("MiesiÂ¹ce"), ylab=c("Prosta stopa zwrotu"))
 lines(r.akcja2, col="grey")
 lines(r.markovitz, col="red")
 lines(r.MAD, col="orange")
@@ -203,7 +202,7 @@ lines(r.WL, col="blue")
 legend("topleft",c("Akcja 1", "Akcja 2", "Markovitz", "MAD", "WL"),
       lty=c(1,1,1,1,1), col=c("black","grey","red","orange","blue"), cex=0.6)
 
-#WskaŸniki
+#WskaÅ¸niki
 b.r<-exp(b.r[12:47])-1
 
 a.r.markovitz<-as.vector(r.markovitz)-as.vector(b.r)
