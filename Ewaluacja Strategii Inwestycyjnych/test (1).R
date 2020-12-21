@@ -1,7 +1,7 @@
-#Usuniêcie starych zmiennych
+#The file bases on a code given by my lecturer that I have modified
 rm(list=ls())
 
-#parametry potrzebne przy strategii œrednich ruchomych
+#parametry potrzebne przy strategii Å“rednich ruchomych
 p=1; q=5
 
 #Wczytanie danych 
@@ -30,7 +30,7 @@ rf <- dane.stopa.wolna$"Otwarcie"
 daty <- as.Date(as.character(dane.stopa.wolna$"Data"), format=data.format)
 rf <- zoo(rf/1200 , order.by = daty) #dzielnie bo w procentach i skali rocznej
 
-#Ustalenie daty pocz¹tku i koñca próby
+#Ustalenie daty poczÂ¹tku i koÃ±ca prÃ³by
 data.start <- "2017-01-01"
 data.koniec <-"2020-03-31"
 
@@ -39,13 +39,13 @@ c1<-window(c, start=as.Date(data.start), end=as.Date(data.koniec))
 b.c1<-window(b.c, start=as.Date(data.start), end=as.Date(data.koniec)) 
 rf<-window(rf, start=as.Date(data.start), end=as.Date(data.koniec))
 
-#konwersja szeregu danych dziennych na dane miesiêczne
+#konwersja szeregu danych dziennych na dane miesiÃªczne
 #aktywo
 c1.m <- apply.monthly(c1, last) #first, mean, mojafunkcja
-K<-60+q # d³ugoœæ okresu próby, 5 lat + dane poprzedzaj¹ce ten okres potrzembne dla decyzji strategii w pierwszym miesi¹cu
+K<-60+q # dÂ³ugoÅ“Ã¦ okresu prÃ³by, 5 lat + dane poprzedzajÂ¹ce ten okres potrzembne dla decyzji strategii w pierwszym miesiÂ¹cu
 c1.m <-c1.m[-c(1:(length(c1.m)-K))]
 daty.miesiace<-time(c1.m)
-N.c1.m<-length(c1.m) #liczba miesiêcy podlegaj¹cych analizie (dla cen)
+N.c1.m<-length(c1.m) #liczba miesiÃªcy podlegajÂ¹cych analizie (dla cen)
 #benchmark
 b.c1.m <- apply.monthly(b.c1, last) #first, mean, mojafunkcja
 K<-60 
@@ -112,7 +112,7 @@ sd(r.s.naiwna)*sqrt((N.r-1)/N.r)*sqrt(12)
 # tail(dane.widok)
 
 #strategia moementum dwuokresowe (j=2)
-j=2 #pamiêtajmy, ¿e j<=q
+j=2 #pamiÃªtajmy, Â¿e j<=q
 s.momentum<-rep(0, N.r)
 s.momentum <- zoo(s.momentum , order.by = time(r))
 momentum<-tail(as.vector(c1.m),n=(N.r+q-j)) - head(as.vector(c1.m),n=(N.r+q-j))
@@ -130,7 +130,7 @@ r.s.momentum<-zoo(r.s.momentum , order.by = time(r))
 # head(dane.widok,n=12)
 # tail(dane.widok)
 
-#strategia œrednie ruchome p,q
+#strategia Å“rednie ruchome p,q
 r.s.ruchome<-rep(0, N.r)->p.ruchome->q.ruchome
 r.s.ruchome <- zoo(r.s.ruchome , order.by = time(r))
 #p.ruchome<-c()
@@ -153,7 +153,7 @@ for (i in index(as.vector(r))[-1]) {
 # head(dane.widok,n=12)
 # tail(dane.widok)
 
-#Wykresy stóp zwrotu poszczególnych strategii
+#Wykresy stÃ³p zwrotu poszczegÃ³lnych strategii
 par(mfrow=c(3,1))
 plot(r, type="l", main="strategia naiwna")
 lines(r.s.naiwna, col="red")
@@ -161,12 +161,12 @@ abline(h=0)
 plot(r, type="l", main="strategia momentum")
 lines(r.s.momentum, col="blue")
 abline(h=0)
-plot(r, type="l", main="strategia œrednich ruchomych")
+plot(r, type="l", main="strategia Å“rednich ruchomych")
 lines(r.s.ruchome, col="green")
 abline(h=0)
 par(mfrow=c(1,1))
 
-#œrednia roczna stopa zwrotu i roczne odch. standardowe dla trzech strategii
+#Å“rednia roczna stopa zwrotu i roczne odch. standardowe dla trzech strategii
 r.aktywa<-mean(r)*12
 r.naiwna<-mean(r.s.naiwna)*12
 r.momentum<-mean(r.s.momentum)*12
@@ -192,10 +192,10 @@ dane<-data.frame(ryzyko, dochod)
 plot(dane, type = "p", col = "green", pch = 16, 
      xlim=c(x.pocz,x.koniec), ylim = c(y.pocz,y.koniec),
      xlab=c("annualizowane odchylenie standardowe"), ylab=c("annualizowana stopa zwrotu"),
-     main=paste("Mapa ryzyko-dochód:", n.aktywo,", \n", "strategie:naiwna,", "momentum i œrednich ruchomych"))
+     main=paste("Mapa ryzyko-dochÃ³d:", n.aktywo,", \n", "strategie:naiwna,", "momentum i Å“rednich ruchomych"))
      
 text(dane, 
-     labels = c(n.aktywo,"s. naiwna,", "s. momentum", paste("s.œrednich ruchomych \n p=", p, "q=", q)), 
+     labels = c(n.aktywo,"s. naiwna,", "s. momentum", paste("s.Å“rednich ruchomych \n p=", p, "q=", q)), 
                       pos = 4, cex = 0.5)
 abline(h=0, col="red")
 
@@ -236,7 +236,7 @@ PercentageGainRatio.ruchome<-length(as.vector(r.s.ruchome)[r.s.ruchome>0])/lengt
 
 tabela.podsumowanie<-data.frame(
   nazwa=rep(dane.aktywo$X.TICKER.[1], times=4),
-  strategia=c("aktywo", "naiwna", "momentum", "œrednie ruchome"),
+  strategia=c("aktywo", "naiwna", "momentum", "Å“rednie ruchome"),
   s.zwrotu=c(r.aktywa*100, r.naiwna*100, r.momentum*100, r.ruchome*100),
   sigma.r=c(sigma.aktywa, sigma.naiwna, sigma.momentum, sigma.ruchome),
   UpCaptureIndicator=c(UpCaptureIndicator.r,UpCaptureIndicator.naiwna, UpCaptureIndicator.momentum, UpCaptureIndicator.ruchome),
@@ -253,7 +253,7 @@ tabela.podsumowanie<-data.frame(
 #   Ocena strategii - relacja stopy zwrotu strategi benchmaku na rynku wzrostowym i spadkowym   #
 #                                z wykorzystaniem Excess Return                                 #
 
-#definiujemy arytmetyczne nadwy¿kowe stopy zwrotu (Excess Return)
+#definiujemy arytmetyczne nadwyÂ¿kowe stopy zwrotu (Excess Return)
 a.r<-as.vector(r)-as.vector(b.r)
 a.r.s.naiwna<-as.vector(r.s.naiwna)-as.vector(b.r)
 a.r.s.momentum<-as.vector(r.s.momentum)-as.vector(b.r)
@@ -279,7 +279,7 @@ tabela.podsumowanie1<-data.frame(
   )
 )
 
-#Doklejamy do poprzedniej tabeli podsumowuj¹cej nowe wyniki
+#Doklejamy do poprzedniej tabeli podsumowujÂ¹cej nowe wyniki
 tabela.podsumowanie<-cbind(tabela.podsumowanie,tabela.podsumowanie1)
 
 #################################################################################################
@@ -307,12 +307,12 @@ tabela.podsumowanie2<-data.frame(
   ie=c(roczny.ie.a.r,roczny.ie.a.r.s.naiwna, roczny.ie.a.r.s.momentum, roczny.ie.a.r.s.ruchome)
 )
 
-# I znowu doklejamy do poprzedniej tabeli podsumowuj¹cej nowe wyniki
+# I znowu doklejamy do poprzedniej tabeli podsumowujÂ¹cej nowe wyniki
 tabela.podsumowanie<-cbind(tabela.podsumowanie,tabela.podsumowanie2)
 
-# 1. jeœli chcemy sklejaæ wyniki dla ró¿nych aktywów, to kolejn¹ linijkê kodu nale¿y wykonaæ dla pierwszego aktywa 
+# 1. jeÅ“li chcemy sklejaÃ¦ wyniki dla rÃ³Â¿nych aktywÃ³w, to kolejnÂ¹ linijkÃª kodu naleÂ¿y wykonaÃ¦ dla pierwszego aktywa 
 tabela.wynikow<-t(tabela.podsumowanie)
-# 2. i nastêpne: sklejamy wyniki dla poprzedniego i obecnego aktywa
+# 2. i nastÃªpne: sklejamy wyniki dla poprzedniego i obecnego aktywa
 tabela.wynikow<-cbind(tabela.wynikow,t(tabela.podsumowanie))
 
 
