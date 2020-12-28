@@ -1,7 +1,7 @@
 This is the folder that is going to contain the code and resources that I have used for my bachelor thesis "Modelling thte Footbalers Prices on a Transfer Market".
 The work is in a progress so I will be updating this folder throughout the time.
 So far,it contains a small scraper that scraps names and values of football players from teams taken from "teams.txt" which contains the links to the top 5 leagues clubs from 2019/20 season.
-The data that I have scraped - Footballersdata_FBRef_Transfermarkt_2019.csv - is the combination of datasets that I have scraped with the usage of this open source tools:
+The data that I have scraped, modified and am going to use - Footballersdata_FBRef_Transfermarkt_2019.csv - is the combination of datasets that I have scraped with the usage of this open source tools:
 
 https://github.com/vnherdeiro/transfermarkt-scraping (my modificiations contained in a folder transfermarkt-scraping-master modified)
 https://github.com/parth1902/Scrape-FBref-data (my modifications contained in a file FBRef_scrap_modified.ipynb)
