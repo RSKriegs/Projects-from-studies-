@@ -4,7 +4,7 @@ So far,it contains a small scraper that scraps names and values of football play
 The data that I have scraped, modified and am going to use - Footballersdata_FBRef_Transfermarkt_2019.csv - is the combination of datasets that I have scraped with the usage of this open source tools:
 
 https://github.com/vnherdeiro/transfermarkt-scraping (my modificiations contained in a folder transfermarkt-scraping-master modified)
-https://github.com/parth1902/Scrape-FBref-data (my modifications contained in a file FBRef_scrap_modified.ipynb)
+https://github.com/parth1902/Scrape-FBref-data (my modifications contained in a file FBRef Scrap Modified.ipynb)
 
 and my small Transfermarkt scraper as well (although to be honest I could have easily modified the first scraper to give players values as well - however, I have not wanted to extend the long scraping time even further within the first module)
 I have slightly modified the code within the projects for my own purposes:
