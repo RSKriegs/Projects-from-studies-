@@ -9,7 +9,7 @@ https://github.com/parth1902/Scrape-FBref-data (my modifications contained in a 
 and my small Transfermarkt scraper as well (although to be honest I could have easily modified the first scraper to give players values as well - however, I have not wanted to extend the long scraping time even further within the first module)
 I have slightly modified the code within the projects for my own purposes:
 1. I deleted/markdowned the lines of code that filtered only offensive players and have modified some parts to omit some problems with the file (for example taking the leagues data from previous seasons - in this example, 2017/18) and to add parameters like Height as well
-2. I have modified some parts to take data from previous seasons
+2. I have mainly modified some parts to take data from previous seasons
 There is an issue with the first one that Bundesliga is for some reason skipped during the process of scraping. The issue can be solved with simply inserting the link in LEAGUES_URL that heads directly to Bundesliga league site and properly modifying LeaguesUrlDic variable.
 In my modifications you can see that the code was used for 2017/18 season but I am focusing data only for 2019/20 throughout the later work.
 I have managed to bind three datasets that were created from the files into a single one Footballersdata_FBRef_Transfermarkt_2019.csv using formulas in Power Query in Excel (an old school environment, but in which I am 100% sure I won't screw anything up :))
