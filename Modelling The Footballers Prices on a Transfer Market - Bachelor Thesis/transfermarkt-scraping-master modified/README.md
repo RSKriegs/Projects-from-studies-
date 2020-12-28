@@ -10,3 +10,7 @@
 
 
 ![](TablePicture.png)
+
+RSKriegs note: I have modified the original files for my own purposes, but due to respect to the original creator I leave the original readme file as well with the link to the Kaggle dataset. :)
+
+Link to the original module: https://github.com/vnherdeiro/transfermarkt-scraping
