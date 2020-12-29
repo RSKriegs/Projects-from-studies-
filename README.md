@@ -12,3 +12,6 @@ Metody Ekonometryczne - Econometric Methods (Raport = Report, Zaliczenie = in th
 Modelowanie Ryzyka Finansowego - Modelling Financial Risk
 
 Systemy baz danych - Database Systems
+
+The data for "Metody Ekonometryczne Raport" was gathered and scraped by myself using R code (that I however lost somewhere during formating my PC...)
+The data for "Metody Ekonometryczne Zaliczenie" was given by my lecturer and modified by myself
